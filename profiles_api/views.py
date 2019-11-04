@@ -1,7 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
+
+
 from profiles_api import serializers
+from profiles_api import models
+from profiles_api import permissions
+
 
 
 class HelloApiView(APIView):
@@ -45,3 +52,25 @@ class HelloApiView(APIView):
     def delete(self,request,pk=None):
         """ delete an object """
         return Response({'method':'DELETE'})
+
+# class HelloViewSet(viewsets.ViewSet):
+#     """test API viewset """
+#     serializer_class=serializers.HelloSerializer
+#
+#     def list(Self,request):
+#         """Return a hello message"""
+#         a_viewset=[
+#         'Uses actions(list,retrieve,update,partial_update)',
+#         'Automatically maps URLs to Routers',
+#         'Provides more functionality with less code',
+#         ]
+#         return Response({'message':'hello','a_viewset':a_viewset})
+
+#create a model view set
+class UserProfileViewSet(viewsets.ModelViewSet):
+    """ Handle creating and updating profiles """
+    serializer_class=serializers.UserProfileSerializer
+    queryset=models.UserProfile.objects.all()
+
+    authentication_classes= (TokenAuthentication,) # so it becomes a tuple
+    permission_classes = (permissions.UpdateOwnProfile,)
