@@ -4,6 +4,8 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import filters
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.settings import api_settings
 
 
 from profiles_api import serializers
@@ -54,18 +56,7 @@ class HelloApiView(APIView):
         """ delete an object """
         return Response({'method':'DELETE'})
 
-# class HelloViewSet(viewsets.ViewSet):
-#     """test API viewset """
-#     serializer_class=serializers.HelloSerializer
-#
-#     def list(Self,request):
-#         """Return a hello message"""
-#         a_viewset=[
-#         'Uses actions(list,retrieve,update,partial_update)',
-#         'Automatically maps URLs to Routers',
-#         'Provides more functionality with less code',
-#         ]
-#         return Response({'message':'hello','a_viewset':a_viewset})
+
 
 #create a model view set
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -78,3 +69,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     filter_backends = (filters.SearchFilter,)
     search_fields= ('name','email',)
+
+class UserLoginApiView(ObtainAuthToken):
+    """ handle creating user authentication tokens """
+    renderer_classes= api_settings.DEFAULT_RENDERER_CLASSES
